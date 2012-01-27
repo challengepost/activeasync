@@ -23,33 +23,58 @@ Or via command line
 Background class methods
 
 ``` ruby
+require 'active_async'
+
 class HeavyLifter
   include ActiveAsync::Async
 
   def lift(*stuff)
+    # heavy lifting
   end
 end
 
 HeavyLifter.async(:lift, 1, 2, 3)
 ```
 
-Run ActiveRecord callbacks asynchronously
+With ActiveRecord and Rails
 
 ``` ruby
-ActiveRecord.send :include, ActiveAsync::ActiveRecord
+# config/application.rb
+require 'active_async/railtie'
 
+# app/models/risky_business.rb
+class RiskyBusiness < ActiveRecord::Base
+
+  def party_time
+    # all night long
+  end
+end
+
+business = RiskyBusiness.last
+business.async(:party_time)  # runs business#party_time asynchronously
+```
+
+Run callbacks asynchronously
+
+``` ruby
 class LateNite < ActiveRecord::Base
   after_save :drive_home, :async => true
 
   def drive_home
-    # takes a long time in traffic
+    # traffic jam
   end
 
-  def phone_call
-  end
 end
 
 late_nite = LateNite.last
-late_nite.async(:phone_call)  # runs late_nite#phone_call asynchronously
-late_nite.save                # runs late_night#drive_home asynchronously
+late_nite.save              # runs late_night#drive_home asynchronously
 ```
+
+## Contributing
+
+To contribute to activeasync, clone the project, install the bundle and migrate the test database:
+
+  $ bundle
+  $ cd spec/dummy && bundle exec rake db:migrate db:test:prepare
+
+Please provide pull requests with tests.

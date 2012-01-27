@@ -3,7 +3,7 @@ require "active_support/concern"
 require "active_async/version"
 require "active_async/async"
 require "active_async/callbacks"
-require "active_async/active_record"
+require "active_async/active_record" if defined?(ActiveRecord)
 
 module ActiveAsync
   extend self
