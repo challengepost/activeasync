@@ -5,6 +5,8 @@ and ruby classes to run methods asynchronously.
 
 ActiveAsync currently depends on Resque and ActiveSupport.
 
+[![Build Status](https://secure.travis-ci.org/challengepost/activeasync.png)](http://travis-ci.org/challengepost/activeasync)
+
 ## Install
 
 In your Gemfile
@@ -42,7 +44,7 @@ class LateNite < ActiveRecord::Base
   def drive_home
     # takes a long time in traffic
   end
-  
+
   def phone_call
   end
 end
