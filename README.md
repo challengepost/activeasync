@@ -42,8 +42,12 @@ class LateNite < ActiveRecord::Base
   def drive_home
     # takes a long time in traffic
   end
+  
+  def phone_call
+  end
 end
 
 late_nite = LateNite.last
-late_nite.async(:drive_home)  # runs asynchrously
+late_nite.async(:phone_call)  # runs late_nite#phone_call asynchronously
+late_nite.save                # runs late_night#drive_home asynchronously
 ```
