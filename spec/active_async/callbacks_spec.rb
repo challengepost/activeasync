@@ -104,7 +104,7 @@ describe ActiveAsync::Callbacks do
         it "should update method name and define async method when async is true" do
           extracted_args = DummyUser.send(:extract_async_methods, [:method_name, {:async => true}])
           extracted_args.should == ["async_method_name", {}]
-          DummyUser.instance_methods.should include("async_method_name")
+          DummyUser.instance_methods.map(&:to_sym).should include(:async_method_name)
         end
       end
 
