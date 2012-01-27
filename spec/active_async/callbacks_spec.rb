@@ -5,8 +5,11 @@ describe ActiveAsync::Callbacks do
   describe "active model example", :stub_resque do
     class DummyBase
       extend ActiveModel::Callbacks
+      include ActiveAsync::Async
+      include ActiveAsync::Callbacks
 
       define_model_callbacks :save, :update, :create
+      define_async_callbacks :after_save, :after_update, :after_create
 
       def id; object_id; end
       def find(id); end
@@ -14,11 +17,6 @@ describe ActiveAsync::Callbacks do
       def save;   run_callbacks :save; end
       def update; run_callbacks :update; end
       def create; run_callbacks :create; end
-
-      include ActiveAsync::Async
-      include ActiveAsync::Callbacks
-
-      define_async_callbacks :after_save, :after_update, :after_create
     end
 
     class DummyUser < DummyBase
