@@ -31,7 +31,6 @@ class HeavyLifter
   def lift(*stuff)
     # heavy lifting
   end
-
 end
 
 HeavyLifter.async(:lift, 1, 2, 3)
@@ -45,11 +44,9 @@ require 'active_async/railtie'
 
 # app/models/risky_business.rb
 class RiskyBusiness < ActiveRecord::Base
-
   def party_time
     # all night long
   end
-
 end
 
 business = RiskyBusiness.last
@@ -65,7 +62,6 @@ class LateNite < ActiveRecord::Base
   def drive_home
     # traffic jam
   end
-
 end
 
 late_nite = LateNite.last
@@ -77,15 +73,13 @@ late_nite.save                # runs late_night#drive_home asynchronously after 
 ActiveAsync comes with some helpers support for RSpec.
 
 To remove Resque dependency from some of your specs, use the :stub_resque option in
-selectd spec blocks. Async methods will run in the foreground.
+selected spec blocks. Async methods will run in the foreground.
 
 ``` ruby
 # spec/spec_helper.rb
-
 require 'active_async/rspec'
 
 # spec/models/late_nite_spec.rb
-
 it "drive home after late nite save", :stub_resque do
   # all methods run in foreground
 end
