@@ -74,11 +74,9 @@ late_nite.save                # runs late_night#drive_home asynchronously after 
 
 ## Contributing
 
-To contribute to activeasync, clone the project, 
+To contribute to activeasync, clone the project and submit pull requests in a branch with tests.
 
 To run tests, install the bundle and migrate the test database:
 
     $ bundle
     $ cd spec/dummy && bundle exec rake db:migrate db:test:prepare
-
-Please provide pull requests with tests.
