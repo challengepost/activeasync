@@ -5,6 +5,11 @@ and ruby classes to run methods asynchronously.
 
 ActiveAsync currently depends on Resque and ActiveSupport.
 
+Ruby support:
+- 1.8.7
+- 1.9.2
+- 1.9.3
+
 [![Build Status](https://secure.travis-ci.org/challengepost/activeasync.png)](http://travis-ci.org/challengepost/activeasync)
 
 ## Install
