@@ -1,3 +1,7 @@
+## 0.0.2 (2012-01-26)
+* railtie for initializing activeasync in rails
+* rspec module for use in testing
+
 ## 0.0.1 (2012-01-26)
 
 * async method: interface for sending methods with arguments to Resque
