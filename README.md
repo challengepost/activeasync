@@ -31,6 +31,7 @@ class HeavyLifter
   def lift(*stuff)
     # heavy lifting
   end
+
 end
 
 HeavyLifter.async(:lift, 1, 2, 3)
@@ -48,10 +49,11 @@ class RiskyBusiness < ActiveRecord::Base
   def party_time
     # all night long
   end
+
 end
 
 business = RiskyBusiness.last
-business.async(:party_time)  # runs business#party_time asynchronously
+business.async(:party_time)     # runs business#party_time asynchronously
 ```
 
 Run callbacks asynchronously
@@ -67,14 +69,16 @@ class LateNite < ActiveRecord::Base
 end
 
 late_nite = LateNite.last
-late_nite.save              # runs late_night#drive_home asynchronously
+late_nite.save                # runs late_night#drive_home asynchronously after save
 ```
 
 ## Contributing
 
-To contribute to activeasync, clone the project, install the bundle and migrate the test database:
+To contribute to activeasync, clone the project, 
 
-  $ bundle
-  $ cd spec/dummy && bundle exec rake db:migrate db:test:prepare
+To run tests, install the bundle and migrate the test database:
+
+    $ bundle
+    $ cd spec/dummy && bundle exec rake db:migrate db:test:prepare
 
 Please provide pull requests with tests.
