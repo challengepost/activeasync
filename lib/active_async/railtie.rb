@@ -1,6 +1,7 @@
-require "active_record"
 require "rails"
+require "active_record"
 require "active_async"
+require "active_async/active_record"
 
 module ActiveAsync
   class Railtie < Rails::Railtie

@@ -6,6 +6,8 @@ ENV["RAILS_ENV"] ||= 'test'
 
 require 'rspec/autorun'
 require 'database_cleaner'
+require 'active_async/rspec'
+
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
 # Load support files
