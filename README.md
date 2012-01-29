@@ -33,7 +33,7 @@ require 'active_async'
 class HeavyLifter
   include ActiveAsync::Async
 
-  def lift(*stuff)
+  def self.lift(*stuff)
     # heavy lifting
   end
 end
