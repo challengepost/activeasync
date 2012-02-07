@@ -1,3 +1,7 @@
+## 0.0.3 (2012-02-07)
+* Ability to set ActiveAsync.background via ActiveAsync.mode = :resque or :fake_resque
+* RSpec around blocks: :enable_resque, :stub_resque
+
 ## 0.0.2 (2012-01-26)
 * railtie for initializing activeasync in rails
 * rspec module for use in testing
