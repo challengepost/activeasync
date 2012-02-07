@@ -16,4 +16,38 @@ describe ActiveAsync do
       ActiveAsync.background.should == ActiveAsync::FakeResque
     end
   end
+
+  describe "enqueue", :stub_resque do
+
+    it "should call enqueue on background strategy" do
+      ActiveAsync::FakeResque.should_receive(:enqueue).with(:args)
+      ActiveAsync.enqueue(:args)
+    end
+  end
+
+  describe "mode=" do
+    before(:each) do
+      ActiveAsync.reset!
+    end
+
+    it "setting to :fake_resque enables FakeResque" do
+      ActiveAsync.mode = :fake_resque
+      ActiveAsync.background.should == ActiveAsync::FakeResque
+    end
+
+    it "setting to :resque enables Resque" do
+      ActiveAsync.mode = :resque
+      ActiveAsync.background.should == ::Resque
+    end
+
+    it "should raise ModeNotSupportedError otherwise" do
+      lambda { ActiveAsync.mode = :mode_doesnt_exist }.should raise_error(ActiveAsync::ModeNotSupportedError)
+    end
+
+    it "should return mode" do
+      ActiveAsync.mode = :fake_resque
+      ActiveAsync.mode.should == :fake_resque
+    end
+  end
+
 end
