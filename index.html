@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Activeasync by challengepost</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Activeasync</h1>
+        <p>Async interface for ActiveRecord and ruby classes</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/challengepost/activeasync" class="button fork"><strong>Fork On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/challengepost/activeasync/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/challengepost/activeasync/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>ActiveAsync</h1>
+
+<p>ActiveAsync aims to provide an interface for easily setting up ActiveRecord objects
+and ruby classes to run methods asynchronously.</p>
+
+<p>ActiveAsync currently depends on Resque and ActiveSupport.</p>
+
+<p>Ruby support:</p>
+
+<ul>
+<li>1.8.7</li>
+<li>1.9.2</li>
+<li>1.9.3</li>
+</ul><p><a href="http://travis-ci.org/challengepost/activeasync"><img src="https://secure.travis-ci.org/challengepost/activeasync.png" alt="Build Status"></a></p>
+
+<h2>Install</h2>
+
+<p>In your Gemfile</p>
+
+<pre><code>gem "activeasync"
+</code></pre>
+
+<p>Or via command line</p>
+
+<pre><code>gem install activeasync
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Background class methods</p>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'active_async'</span>
+
+<span class="k">class</span> <span class="nc">HeavyLifter</span>
+  <span class="kp">include</span> <span class="no">ActiveAsync</span><span class="o">::</span><span class="no">Async</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">lift</span><span class="p">(</span><span class="o">*</span><span class="n">stuff</span><span class="p">)</span>
+    <span class="c1"># heavy lifting</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">HeavyLifter</span><span class="o">.</span><span class="n">async</span><span class="p">(</span><span class="ss">:lift</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>With ActiveRecord and Rails</p>
+
+<div class="highlight">
+<pre><span class="c1"># config/application.rb</span>
+<span class="nb">require</span> <span class="s1">'active_async/railtie'</span>
+
+<span class="c1"># app/models/risky_business.rb</span>
+<span class="k">class</span> <span class="nc">RiskyBusiness</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="k">def</span> <span class="nf">party_time</span>
+    <span class="c1"># all night long</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">business</span> <span class="o">=</span> <span class="no">RiskyBusiness</span><span class="o">.</span><span class="n">last</span>
+<span class="n">business</span><span class="o">.</span><span class="n">async</span><span class="p">(</span><span class="ss">:party_time</span><span class="p">)</span>     <span class="c1"># runs business#party_time asynchronously</span>
+</pre>
+</div>
+
+
+<p>Run callbacks asynchronously</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">LateNite</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">after_save</span> <span class="ss">:drive_home</span><span class="p">,</span> <span class="ss">:async</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+
+  <span class="k">def</span> <span class="nf">drive_home</span>
+    <span class="c1"># traffic jam</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">late_nite</span> <span class="o">=</span> <span class="no">LateNite</span><span class="o">.</span><span class="n">last</span>
+<span class="n">late_nite</span><span class="o">.</span><span class="n">save</span>                <span class="c1"># runs late_night#drive_home asynchronously after save</span>
+</pre>
+</div>
+
+
+<h2>RSpec</h2>
+
+<p>ActiveAsync comes with some helpers support for RSpec.</p>
+
+<p>To remove Resque dependency from some of your specs, use the :stub_resque option in
+selected spec blocks. Async methods will run in the foreground.</p>
+
+<div class="highlight">
+<pre><span class="c1"># spec/spec_helper.rb</span>
+<span class="nb">require</span> <span class="s1">'active_async/rspec'</span>
+
+<span class="c1"># spec/models/late_nite_spec.rb</span>
+<span class="n">it</span> <span class="s2">"drive home after late nite save"</span><span class="p">,</span> <span class="ss">:stub_resque</span> <span class="k">do</span>
+  <span class="c1"># all methods run in foreground</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>You can also manually set the Async background adapter to <code>ActiveAsync::FakeResque</code> or 
+any similar module/class that responds to <code>#enqueue(*args)</code>:</p>
+
+<div class="highlight">
+<pre><span class="n">before</span> <span class="k">do</span>
+  <span class="no">ActiveAsync</span><span class="o">.</span><span class="n">background</span> <span class="o">=</span> <span class="no">ActiveAsync</span><span class="o">::</span><span class="no">FakeResque</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<h2>Contributing</h2>
+
+<p>To contribute to activeasync, clone the project and submit pull requests in a branch with tests.</p>
+
+<p>To run tests, install the bundle and migrate the test database:</p>
+
+<pre><code>$ bundle
+$ cd spec/dummy &amp;&amp; bundle exec rake db:migrate db:test:prepare
+</code></pre>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/challengepost">challengepost</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
