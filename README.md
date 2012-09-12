@@ -12,6 +12,8 @@ Ruby support:
 
 [![Build Status](https://secure.travis-ci.org/challengepost/activeasync.png)](http://travis-ci.org/challengepost/activeasync)
 
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/challengepost/activeasync)
+
 ## Install
 
 In your Gemfile
@@ -90,7 +92,7 @@ it "drive home after late nite save", :stub_resque do
 end
 ```
 
-You can also manually set the Async background adapter to `ActiveAsync::FakeResque` or 
+You can also manually set the Async background adapter to `ActiveAsync::FakeResque` or
 any similar module/class that responds to `#enqueue(*args)`:
 
 ``` ruby
