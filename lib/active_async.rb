@@ -8,8 +8,10 @@ module ActiveAsync
 
   class ModeNotSupportedError < StandardError; end
 
+  DEFAULT_MODE = :resque
+
   def background
-    @background ||= ::Resque
+    @background ||= set_background_for_mode
   end
 
   def background=(background)
@@ -31,12 +33,12 @@ module ActiveAsync
   end
 
   def mode
-    @mode || (mode = :resque)
+    @mode ||= DEFAULT_MODE
   end
 
   private
 
-  def set_background_for_mode(mode)
+  def set_background_for_mode(mode = DEFAULT_MODE)
     case mode
     when :sidekiq
       require "sidekiq"
