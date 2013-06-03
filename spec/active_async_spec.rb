@@ -40,6 +40,11 @@ describe ActiveAsync do
       ActiveAsync.background.should == ::Resque
     end
 
+    it "setting to :sidekiq enables Sidekiq" do
+      ActiveAsync.mode = :sidekiq
+      ActiveAsync.background.should == ::Sidekiq::Client
+    end
+
     it "should raise ModeNotSupportedError otherwise" do
       lambda { ActiveAsync.mode = :mode_doesnt_exist }.should raise_error(ActiveAsync::ModeNotSupportedError)
     end

@@ -20,9 +20,10 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_runtime_dependency "rest-client"
-  s.add_dependency "resque", "~> 1.10"
   s.add_dependency "activesupport", "~> 3.0"
 
+  s.add_development_dependency "resque", "~> 1.19"
+  s.add_development_dependency "sidekiq", "~> 1.2"
   s.add_development_dependency "rails", "~> 3.0"
   s.add_development_dependency "rspec", "~> 2.8.0"
   s.add_development_dependency "database_cleaner", "~> 0.7.0"

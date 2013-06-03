@@ -1,4 +1,3 @@
-require "resque"
 require "active_support/concern"
 require "active_async/version"
 require "active_async/async"
@@ -39,7 +38,11 @@ module ActiveAsync
 
   def set_background_for_mode(mode)
     case mode
+    when :sidekiq
+      require "sidekiq"
+      @background = ::Sidekiq::Client
     when :resque
+      require "resque"
       @background = ::Resque
     when :fake_resque
       require 'active_async/fake_resque'
