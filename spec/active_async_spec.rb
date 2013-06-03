@@ -23,6 +23,7 @@ describe ActiveAsync do
       ActiveAsync::FakeResque.should_receive(:enqueue).with(:args)
       ActiveAsync.enqueue(:args)
     end
+
   end
 
   describe "mode=" do

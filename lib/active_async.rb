@@ -10,16 +10,16 @@ module ActiveAsync
 
   DEFAULT_MODE = :resque
 
+  def enqueue(*args)
+    background.enqueue(*args)
+  end
+
   def background
-    @background ||= set_background_for_mode
+    @background ||= background_for_mode(DEFAULT_MODE)
   end
 
   def background=(background)
     @background = background
-  end
-
-  def enqueue(*args)
-    background.enqueue(*args)
   end
 
   def reset!
@@ -28,7 +28,7 @@ module ActiveAsync
   end
 
   def mode=(mode)
-    set_background_for_mode(mode)
+    self.background = background_for_mode(mode)
     @mode = mode
   end
 
@@ -36,19 +36,17 @@ module ActiveAsync
     @mode ||= DEFAULT_MODE
   end
 
-  private
-
-  def set_background_for_mode(mode = DEFAULT_MODE)
+  def background_for_mode(mode)
     case mode
     when :sidekiq
       require "sidekiq"
-      @background = ::Sidekiq::Client
+      ::Sidekiq::Client
     when :resque
       require "resque"
-      @background = ::Resque
+      ::Resque
     when :fake_resque
       require 'active_async/fake_resque'
-      @background = FakeResque
+      FakeResque
     else
       raise ModeNotSupportedError
     end

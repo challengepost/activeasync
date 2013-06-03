@@ -2,27 +2,28 @@ require 'spec_helper'
 
 describe ActiveAsync::ActiveRecord do
 
-  let(:blog) { Blog.new }
+  context "callback with :async => true" do
+    let(:subject) { Blog.create }
 
-  before(:each) do
-    Blog.stub!(:find).and_return(blog)
-  end
-
-  describe "included", :stub_resque do
-    it "should define async callback for save" do
-      blog.should_receive(:expensive_save_method)
-      blog.save
+    before(:each) do
+      subject
     end
 
-    it "should define async callback for update" do
-      blog.save
-      blog.should_receive(:expensive_update_method)
-      blog.update_attributes(:title => "foo")
-    end
+    describe "included", :stub_resque do
+      it "should define async callback for save" do
+        Blog.should_receive(:expensive_save_method)
+        subject.save
+      end
 
-    it "should define async callback for create" do
-      blog.should_receive(:expensive_create_method)
-      Blog.create
+      it "should define async callback for update" do
+        Blog.should_receive(:expensive_update_method)
+        subject.update_attributes(:title => "foo")
+      end
+
+      it "should define async callback for create" do
+        Blog.should_receive(:expensive_create_method)
+        Blog.create
+      end
     end
   end
 end

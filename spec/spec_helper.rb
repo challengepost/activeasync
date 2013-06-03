@@ -10,6 +10,10 @@ require 'active_async/rspec'
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
+require 'resque'
+require 'sidekiq'
+require 'sidekiq/testing/inline'
+
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -17,6 +21,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.before(:suite) do
+    Resque.inline = true
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
