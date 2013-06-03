@@ -31,7 +31,16 @@ module ActiveAsync
     # We can pass this any Repository instance method that we want to
     # run later.
     def async(method, *args)
-      ActiveAsync.background.enqueue(self.class, id, method, *args)
+      async_client.enqueue(self.class, id, method, *args)
+    end
+
+    def async_with(mode, method, *args)
+      async_client(mode).enqueue(self.class, id, method, *args)
+    end
+
+    def async_client(mode = nil)
+      return ActiveAsync.background if mode.nil?
+      return ActiveAsync.background_for_mode(mode)
     end
 
   end

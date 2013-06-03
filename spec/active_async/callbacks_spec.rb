@@ -19,6 +19,24 @@ describe ActiveAsync::Callbacks do
       def create; run_callbacks :create; end
     end
 
+    class DummyBlog < DummyBase
+      include Sidekiq::Worker
+
+      after_save :expensive_resque_method,  :async => :resque
+      after_save :expensive_sidekiq_method, :async => :sidekiq
+
+      def self.expensive_resque_method; end
+      def self.expensive_sidekiq_method; end
+
+      # Sidekiq api
+      def perform(*args)
+         self.class.expensive_sidekiq_method
+      end
+
+      def expensive_sidekiq_method; perform; end
+      def expensive_resque_method; self.class.expensive_resque_method; end
+    end
+
     class DummyUser < DummyBase
       after_save    :save_expensive_method,   :async => true
       after_update  :update_expensive_method, :async => true
@@ -33,60 +51,59 @@ describe ActiveAsync::Callbacks do
       end
     end
 
-    let(:model) { DummyUser.new }
-
     before(:each) do
-      DummyUser.stub!(:find).and_return(model)
+      DummyBase.stub!(:find).and_return(subject)
     end
 
-    describe "callbacks with async" do
+    context "callbacks with async" do
+      let(:subject) { DummyUser.new }
 
       describe "on create" do
         it "should run create method" do
-          model.should_receive(:create_expensive_method).once
-          model.create
+          subject.should_receive(:create_expensive_method).once
+          subject.create
         end
 
         it "should run methods asynchronously on create" do
-          model.should_receive(:async).with(:create_expensive_method)
-          model.create
+          subject.should_receive(:async_with).with(:resque, :create_expensive_method)
+          subject.create
         end
 
       end
 
       describe "on save" do
         it "should run save method" do
-          model.should_receive(:save_expensive_method).once
-          model.save
+          subject.should_receive(:save_expensive_method).once
+          subject.save
         end
 
         it "should run methods asynchronously on create" do
-          model.should_receive(:async).with(:save_expensive_method)
-          model.save
+          subject.should_receive(:async_with).with(:resque, :save_expensive_method)
+          subject.save
         end
       end
 
       describe "on update" do
         it "should run update method" do
-          model.should_receive(:update_expensive_method).once
-          model.update
+          subject.should_receive(:async_with).with(:resque, :update_expensive_method).once
+          subject.update
         end
 
         it "should run methods asynchronously on update" do
-          model.should_receive(:async).with(:update_expensive_method)
-          model.update
+          subject.should_receive(:async_with).with(:resque, :update_expensive_method)
+          subject.update
         end
       end
 
       it "should run expensive method for each callback" do
         DummyUser.should_receive(:run_expensive_method).exactly(1).times
-        model.create
+        subject.create
 
         DummyUser.should_receive(:run_expensive_method).exactly(1).times
-        model.save
+        subject.save
 
         DummyUser.should_receive(:run_expensive_method).exactly(1).times
-        model.update
+        subject.update
       end
 
       describe ".extract_async_methods" do
@@ -107,9 +124,27 @@ describe ActiveAsync::Callbacks do
           DummyUser.instance_methods.map(&:to_sym).should include(:async_method_name)
         end
       end
-
-
     end
-  end
 
+    context "callback with :async => mode" do
+      let(:subject) { DummyBlog.new }
+
+      it "should trigger Resque job" do
+        Resque.should_receive(:enqueue).with(
+          DummyBlog, subject.id, :expensive_resque_method).once
+        Resque.should_not_receive(:enqueue).with(
+          DummyBlog, subject.id, :expensive_sidekiq_method)
+        subject.save
+      end
+
+      it "should trigger Sidekiq" do
+        Sidekiq::Client.should_receive(:enqueue).with(
+          DummyBlog, subject.id, :expensive_sidekiq_method).once
+        Sidekiq::Client.should_not_receive(:enqueue).with(
+          DummyBlog, subject.id, :expensive_resque_method)
+        subject.save
+      end
+    end
+
+  end
 end

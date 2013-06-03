@@ -12,18 +12,16 @@ describe ActiveAsync do
     end
 
     it "can be overridden" do
-      ActiveAsync.background = ActiveAsync::FakeResque
-      ActiveAsync.background.should == ActiveAsync::FakeResque
+      ActiveAsync.background = ActiveAsync::FakeQueue
+      ActiveAsync.background.should == ActiveAsync::FakeQueue
     end
   end
 
   describe "enqueue", :stub_resque do
-
     it "should call enqueue on background strategy" do
-      ActiveAsync::FakeResque.should_receive(:enqueue).with(:args)
+      ActiveAsync::FakeQueue.should_receive(:enqueue).with(:args)
       ActiveAsync.enqueue(:args)
     end
-
   end
 
   describe "mode=" do
@@ -31,9 +29,9 @@ describe ActiveAsync do
       ActiveAsync.reset!
     end
 
-    it "setting to :fake_resque enables FakeResque" do
-      ActiveAsync.mode = :fake_resque
-      ActiveAsync.background.should == ActiveAsync::FakeResque
+    it "setting to :fake_queue enables FakeQueue" do
+      ActiveAsync.mode = :fake_queue
+      ActiveAsync.background.should == ActiveAsync::FakeQueue
     end
 
     it "setting to :resque enables Resque" do
@@ -51,8 +49,8 @@ describe ActiveAsync do
     end
 
     it "should return mode" do
-      ActiveAsync.mode = :fake_resque
-      ActiveAsync.mode.should == :fake_resque
+      ActiveAsync.mode = :fake_queue
+      ActiveAsync.mode.should == :fake_queue
     end
   end
 

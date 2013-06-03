@@ -92,12 +92,12 @@ it "drive home after late nite save", :stub_resque do
 end
 ```
 
-You can also manually set the Async background adapter to `ActiveAsync::FakeResque` or
+You can also manually set the Async background adapter to `ActiveAsync::FakeQueue` or
 any similar module/class that responds to `#enqueue(*args)`:
 
 ``` ruby
 before do
-  ActiveAsync.background = ActiveAsync::FakeResque
+  ActiveAsync.background = ActiveAsync::FakeQueue
 end
 ```
 

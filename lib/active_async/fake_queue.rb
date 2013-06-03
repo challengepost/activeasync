@@ -1,5 +1,5 @@
 module ActiveAsync
-  module FakeResque
+  module FakeQueue
     extend self
 
     def self.enqueue(klass, *args)

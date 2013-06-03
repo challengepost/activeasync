@@ -24,22 +24,23 @@ module ActiveAsync
 
       def extract_async_methods(methods)
         options = methods.extract_options!
-        methods = options[:async] ? define_async_methods(methods) : methods
+        async_mode = options[:async]
+        async_mode = ActiveAsync.mode if async_mode == true
+        methods = async_mode ? define_async_methods(async_mode, methods) : methods
         methods.push(options.except(:async))
       end
 
-      def define_async_methods(methods)
+      def define_async_methods(async_mode, methods)
         methods.map do |method_name|
-          async_name = "async_#{method_name}"
-          unless instance_methods.include?(async_name)
-            define_method(async_name) do
-              async(method_name)
+          "async_#{method_name}".tap do |async_name|
+            unless instance_methods.include?(async_name)
+              define_method(async_name) do
+                async_with(async_mode, method_name)
+              end
             end
           end
-          async_name
         end
       end
-
     end
   end
 end

@@ -44,9 +44,9 @@ module ActiveAsync
     when :resque
       require "resque"
       ::Resque
-    when :fake_resque
-      require 'active_async/fake_resque'
-      FakeResque
+    when :fake_queue, :fake_resque, :fake_sidekiq
+      require 'active_async/fake_queue'
+      FakeQueue
     else
       raise ModeNotSupportedError
     end

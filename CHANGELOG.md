@@ -1,5 +1,10 @@
+## 0.0.4 (2013-06-03)
+* Add support for Sidekiq mode
+* Set client in callback via `:async => :resque`, `:async => :sidekiq`
+* Replace FakeResque with FakeQueue class for testing
+
 ## 0.0.3 (2012-02-07)
-* Ability to set ActiveAsync.background via ActiveAsync.mode = :resque or :fake_resque
+* Ability to set ActiveAsync.background via ActiveAsync.mode = :resque or :fake_queue
 * RSpec around blocks: :enable_resque, :stub_resque
 
 ## 0.0.2 (2012-01-26)
