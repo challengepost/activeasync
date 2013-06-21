@@ -32,7 +32,7 @@ module ActiveAsync
 
       def define_async_methods(async_mode, methods)
         methods.map do |method_name|
-          "async_#{method_name}".tap do |async_name|
+          "async_#{async_mode}_#{method_name}".tap do |async_name|
             unless instance_methods.include?(async_name)
               define_method(async_name) do
                 async_with(async_mode, method_name)
