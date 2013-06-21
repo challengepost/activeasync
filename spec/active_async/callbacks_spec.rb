@@ -34,7 +34,7 @@ describe ActiveAsync::Callbacks do
 
       # Sidekiq api
       def perform(*args)
-         self.class.expensive_sidekiq_method
+        self.class.expensive_sidekiq_method
       end
 
       def expensive_sidekiq_method; perform; end
