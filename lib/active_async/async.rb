@@ -28,10 +28,17 @@ module ActiveAsync
 
     end
 
-    # We can pass this any Repository instance method that we want to
-    # run later.
+    # We can pass any instance method that we want to run later.
+    # Arguments should be serializable for Resque.
+    #
+    # Setting ActiveAsync.skip = true will bypass async altogether.
+    #
     def async(method, *args)
-      ActiveAsync.background.enqueue(self.class, id, method, *args)
+      if ActiveAsync.skip?
+        self.send(method, *args)
+      else
+        ActiveAsync.background.enqueue(self.class, id, method, *args)
+      end
     end
 
   end

@@ -26,6 +26,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
+    ActiveAsync.skip = nil
     DatabaseCleaner.clean
   end
 end

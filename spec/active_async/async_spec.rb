@@ -56,6 +56,12 @@ describe ActiveAsync::Async do
         post = Post.new
         lambda { post.async(:expensive_method) }.should raise_error(ActiveRecord::RecordNotFound)
       end
+
+      it "should call given method directly when skipping async" do
+        ActiveAsync.skip = true
+        post.should_receive(:expensive_method)
+        post.async(:expensive_method)
+      end
     end
   end
 
