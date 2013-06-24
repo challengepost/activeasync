@@ -20,4 +20,10 @@ describe "ActiveAsync::RSpec" do
       ActiveAsync.background.should == ::Resque
     end
   end
+
+  describe ":skip_async block" do
+    it "should skip async in block", :skip_async do
+      ActiveAsync.skip?.should be_true
+    end
+  end
 end

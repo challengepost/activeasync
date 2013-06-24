@@ -36,15 +36,24 @@ module ActiveAsync
     @mode || (mode = :resque)
   end
 
+  def skip=(true_or_false)
+    @skip = true_or_false
+  end
+
+  def skip
+    !!@skip
+  end
+  alias :skip? :skip
+
   private
 
   def set_background_for_mode(mode)
-    case mode
+    @background = case mode
     when :resque
-      @background = ::Resque
+      ::Resque
     when :fake_resque
       require 'active_async/fake_resque'
-      @background = FakeResque
+      FakeResque
     else
       raise ModeNotSupportedError
     end
