@@ -18,4 +18,11 @@ RSpec.configure do |config|
     ActiveAsync.mode = async_mode
   end
 
+  config.around(:each, :skip_async) do |example|
+    skip_setting     = ActiveAsync.skip
+    ActiveAsync.skip = true
+    example.run
+    ActiveAsync.skip = skip_setting
+  end
+
 end

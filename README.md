@@ -46,9 +46,6 @@ HeavyLifter.async(:lift, 1, 2, 3)
 With ActiveRecord and Rails
 
 ``` ruby
-# config/application.rb
-require 'active_async/railtie'
-
 # app/models/risky_business.rb
 class RiskyBusiness < ActiveRecord::Base
   def party_time

@@ -50,4 +50,14 @@ describe ActiveAsync do
     end
   end
 
+  describe "skip" do
+    it "should be false" do
+      ActiveAsync.skip?.should be_false
+    end
+
+    it "can be set to true" do
+      ActiveAsync.skip = true
+      ActiveAsync.skip?.should be_true
+    end
+  end
 end
