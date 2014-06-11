@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "resque", "~> 1.10"
   s.add_dependency "activesupport", ">= 3.0"
 
-  s.add_development_dependency "rails"
+  s.add_development_dependency "rails", ">= 3.0"
   s.add_development_dependency "rspec", ">= 2.8.0"
   s.add_development_dependency "database_cleaner", "~> 0.7.0"
   s.add_development_dependency "sqlite3"
