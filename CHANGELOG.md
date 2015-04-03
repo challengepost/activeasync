@@ -1,3 +1,8 @@
+## 0.1.0 (2015-04-20)
+
+* ActiveAsync.background removed (breaking change); setup should be done with
+  ActiveAsync.configure
+
 ## 0.0.3 (2012-02-07)
 * Ability to set ActiveAsync.background via ActiveAsync.mode = :resque or :fake_resque
 * RSpec around blocks: :enable_resque, :stub_resque

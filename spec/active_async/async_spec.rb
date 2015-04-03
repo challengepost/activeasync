@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe ActiveAsync::Async do
-
-  context "activerecord, resque", :stub_resque do
+  context "activerecord", :inline do
     let(:post) { Post.create(:title => "A new post") }
 
     describe "queue" do
@@ -17,13 +16,6 @@ describe ActiveAsync::Async do
       end
     end
 
-    describe "perform" do
-      it "should send method for given instance id" do
-        expect_any_instance_of(Post).to receive(:expensive_method)
-        Post.perform(post.id, :expensive_method)
-      end
-    end
-
     describe "async" do
       it "should send method for given instance id" do
         expect(Post).to receive(:expensive_method)
@@ -32,6 +24,11 @@ describe ActiveAsync::Async do
     end
 
     describe "#async" do
+      it "should call perform on ActiveAsync" do
+        expect(ActiveAsync::Async).to receive(:perform).with("Post", post.id, :expensive_method)
+        post.async(:expensive_method)
+      end
+
       it "should call the given method" do
         expect_any_instance_of(Post).to receive(:expensive_method)
         post.async(:expensive_method)
@@ -40,11 +37,6 @@ describe ActiveAsync::Async do
       it "should call the given method" do
         expect_any_instance_of(Post).to receive(:expensive_method).with(1, 2, 3)
         post.async(:expensive_method, 1, 2, 3)
-      end
-
-      it "should call 'perform' class method as expected by Resque" do
-        expect(Post).to receive(:perform).with(post.id, :expensive_method)
-        post.async(:expensive_method)
       end
 
       it "should find the existing record" do
@@ -57,12 +49,39 @@ describe ActiveAsync::Async do
         expect { post.async(:expensive_method) }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      it "should call given method directly when skipping async" do
-        ActiveAsync.skip = true
-        expect(post).to receive(:expensive_method)
-        post.async(:expensive_method)
+      describe "resque", :resque do
+        it "should call method on instance" do
+          post.async(:change_title, "A new title")
+          post.reload
+          expect(post.title).to eq("A new title")
+        end
+
+        it "should call 'perform' class method as expected by Resque" do
+          expect(Resque).to receive(:enqueue).with \
+            ActiveAsync::QueueAdapters::ResqueAdapter::JobWrapper,
+            "Post",
+            post.id,
+            :expensive_method
+          post.async(:expensive_method)
+        end
+      end
+
+      describe "sidekiq", :sidekiq do
+        it "should call method on instance" do
+          post.async(:change_title, "A new title")
+          post.reload
+          expect(post.title).to eq("A new title")
+        end
+
+        it "should call 'perform' class method as expected by Sidekiq::Client" do
+          expect(Sidekiq::Client).to receive(:enqueue).with \
+            ActiveAsync::QueueAdapters::SidekiqAdapter::JobWrapper,
+            "Post",
+            post.id,
+            :expensive_method
+          post.async(:expensive_method)
+        end
       end
     end
   end
-
 end
