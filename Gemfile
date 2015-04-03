@@ -12,3 +12,8 @@ else
 end
 
 gem "rack-test"
+
+group :development, :test do
+  gem 'pry'
+  gem 'pry-debugger'
+end

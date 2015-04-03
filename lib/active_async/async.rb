@@ -9,23 +9,33 @@ module ActiveAsync
       self.queue = :general
     end
 
-    module ClassMethods
-
+    class << self
       # This will be called by a worker when a job needs to be processed
-      def perform(id, method, *args)
-        async_class_or_instance(id).send(method, *args)
-      end
-
-      def async(method, *args)
-        ActiveAsync.background.enqueue(self, CLASS_IDENTIFIER, method, *args)
+      def perform(class_name, id, method, *args)
+        deserialize(class_name, id).send(method, *args)
       end
 
       private
 
-      def async_class_or_instance(id)
-        id == CLASS_IDENTIFIER ? self : self.find(id)
+      def deserialize(class_name, id)
+        active_record_class = class_name.safe_constantize
+        case id
+        when CLASS_IDENTIFIER
+          active_record_class
+        else
+          active_record_class.find(id)
+        end
+      end
+    end
+
+    module ClassMethods
+      def async(method, *args)
+        ActiveAsync.queue_adapter.enqueue(self.to_s, CLASS_IDENTIFIER, method, *args)
       end
 
+      def perform(*args)
+        ActiveAsync::Async.perform(self.to_s, CLASS_IDENTIFIER, *args)
+      end
     end
 
     # We can pass any instance method that we want to run later.
@@ -34,12 +44,7 @@ module ActiveAsync
     # Setting ActiveAsync.skip = true will bypass async altogether.
     #
     def async(method, *args)
-      if ActiveAsync.skip?
-        self.send(method, *args)
-      else
-        ActiveAsync.background.enqueue(self.class, id, method, *args)
-      end
+      ActiveAsync.queue_adapter.enqueue(self.class.to_s, id, method, *args)
     end
-
   end
 end
