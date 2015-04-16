@@ -1,7 +1,7 @@
 ## 0.1.0 (2015-04-20)
 
-* ActiveAsync.background removed (breaking change); setup should be done with
-  ActiveAsync.configure
+* BREAKING CHANGES: background, mode, skip? are all removed and replaced with
+  ActiveAsync.queue_adapter to match the ActiveJob API and simplify setup
 
 ## 0.0.3 (2012-02-07)
 * Ability to set ActiveAsync.background via ActiveAsync.mode = :resque or :fake_resque
