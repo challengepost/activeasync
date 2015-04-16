@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport", ">= 3.0"
 
   s.add_development_dependency "rails", ">= 3.0"
-  s.add_development_dependency "rspec", "~> 2.8.0"
+  s.add_development_dependency "rspec", ">= 3"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "sqlite3"
 end

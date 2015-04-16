@@ -8,19 +8,19 @@ describe ActiveAsync do
     end
 
     it "defaults to Resque" do
-      ActiveAsync.background.should == ::Resque
+      expect(ActiveAsync.background).to eq(::Resque)
     end
 
     it "can be overridden" do
       ActiveAsync.background = ActiveAsync::FakeResque
-      ActiveAsync.background.should == ActiveAsync::FakeResque
+      expect(ActiveAsync.background).to eq(ActiveAsync::FakeResque)
     end
   end
 
   describe "enqueue", :stub_resque do
 
     it "should call enqueue on background strategy" do
-      ActiveAsync::FakeResque.should_receive(:enqueue).with(:args)
+      expect(ActiveAsync::FakeResque).to receive(:enqueue).with(:args)
       ActiveAsync.enqueue(:args)
     end
   end
@@ -32,32 +32,32 @@ describe ActiveAsync do
 
     it "setting to :fake_resque enables FakeResque" do
       ActiveAsync.mode = :fake_resque
-      ActiveAsync.background.should == ActiveAsync::FakeResque
+      expect(ActiveAsync.background).to eq(ActiveAsync::FakeResque)
     end
 
     it "setting to :resque enables Resque" do
       ActiveAsync.mode = :resque
-      ActiveAsync.background.should == ::Resque
+      expect(ActiveAsync.background).to eq(::Resque)
     end
 
     it "should raise ModeNotSupportedError otherwise" do
-      lambda { ActiveAsync.mode = :mode_doesnt_exist }.should raise_error(ActiveAsync::ModeNotSupportedError)
+      expect { ActiveAsync.mode = :mode_doesnt_exist }.to raise_error(ActiveAsync::ModeNotSupportedError)
     end
 
     it "should return mode" do
       ActiveAsync.mode = :fake_resque
-      ActiveAsync.mode.should == :fake_resque
+      expect(ActiveAsync.mode).to eq(:fake_resque)
     end
   end
 
   describe "skip" do
     it "should be false" do
-      ActiveAsync.skip?.should be_false
+      expect(ActiveAsync.skip?).to be_falsey
     end
 
     it "can be set to true" do
       ActiveAsync.skip = true
-      ActiveAsync.skip?.should be_true
+      expect(ActiveAsync.skip?).to be_truthy
     end
   end
 end
