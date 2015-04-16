@@ -4,7 +4,6 @@ $LOAD_PATH.unshift dir + '/../lib'
 # Configure Rails Environment
 ENV["RAILS_ENV"] ||= 'test'
 
-require 'rspec/autorun'
 require 'database_cleaner'
 require 'active_async/rspec'
 
