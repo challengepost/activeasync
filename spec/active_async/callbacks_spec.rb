@@ -36,19 +36,19 @@ describe ActiveAsync::Callbacks do
     let(:model) { DummyUser.new }
 
     before(:each) do
-      DummyUser.stub!(:find).and_return(model)
+      allow(DummyUser).to receive(:find).and_return(model)
     end
 
     describe "callbacks with async" do
 
       describe "on create" do
         it "should run create method" do
-          model.should_receive(:create_expensive_method).once
+          expect(model).to receive(:create_expensive_method).once
           model.create
         end
 
         it "should run methods asynchronously on create" do
-          model.should_receive(:async).with(:create_expensive_method)
+          expect(model).to receive(:async).with(:create_expensive_method)
           model.create
         end
 
@@ -56,55 +56,55 @@ describe ActiveAsync::Callbacks do
 
       describe "on save" do
         it "should run save method" do
-          model.should_receive(:save_expensive_method).once
+          expect(model).to receive(:save_expensive_method).once
           model.save
         end
 
         it "should run methods asynchronously on create" do
-          model.should_receive(:async).with(:save_expensive_method)
+          expect(model).to receive(:async).with(:save_expensive_method)
           model.save
         end
       end
 
       describe "on update" do
         it "should run update method" do
-          model.should_receive(:update_expensive_method).once
+          expect(model).to receive(:update_expensive_method).once
           model.update
         end
 
         it "should run methods asynchronously on update" do
-          model.should_receive(:async).with(:update_expensive_method)
+          expect(model).to receive(:async).with(:update_expensive_method)
           model.update
         end
       end
 
       it "should run expensive method for each callback" do
-        DummyUser.should_receive(:run_expensive_method).exactly(1).times
+        expect(DummyUser).to receive(:run_expensive_method).exactly(1).times
         model.create
 
-        DummyUser.should_receive(:run_expensive_method).exactly(1).times
+        expect(DummyUser).to receive(:run_expensive_method).exactly(1).times
         model.save
 
-        DummyUser.should_receive(:run_expensive_method).exactly(1).times
+        expect(DummyUser).to receive(:run_expensive_method).exactly(1).times
         model.update
       end
 
       describe ".extract_async_methods" do
         it "should forward unmodified arguments if not asyncing" do
           extracted_args = DummyUser.send(:extract_async_methods, [:method_name, {:more_options => true}])
-          extracted_args.should == [:method_name, {:more_options => true}]
+          expect(extracted_args).to eq([:method_name, {:more_options => true}])
         end
 
         it "should pass along all options to after_create macro execpt :async" do
           extracted_args = DummyUser.send(:extract_async_methods, [:method_name, {:more_options => true, :async => true}])
-          extracted_args.should include(:more_options => true)
-          extracted_args.should_not include(:async => true)
+          expect(extracted_args).to include(:more_options => true)
+          expect(extracted_args).not_to include(:async => true)
         end
 
         it "should update method name and define async method when async is true" do
           extracted_args = DummyUser.send(:extract_async_methods, [:method_name, {:async => true}])
-          extracted_args.should == ["async_method_name", {}]
-          DummyUser.instance_methods.map(&:to_sym).should include(:async_method_name)
+          expect(extracted_args).to eq(["async_method_name", {}])
+          expect(DummyUser.instance_methods.map(&:to_sym)).to include(:async_method_name)
         end
       end
 
