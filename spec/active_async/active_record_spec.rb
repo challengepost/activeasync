@@ -26,7 +26,7 @@ describe ActiveAsync::ActiveRecord do
     end
   end
 
-  context "synchronous callbacks" do
+  context "synchronous callbacks", :stub_resque do
     it "doesn't prevent synchronous callbacks to be called" do
       expect(blog).to receive(:cheap_save_from_block)
       expect(blog).to receive(:cheap_save_from_lambda)
