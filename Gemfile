@@ -9,3 +9,4 @@ when "default"
 else
   gem "rails", "~> #{rails_version}"
 end
+gem "rack-test"
