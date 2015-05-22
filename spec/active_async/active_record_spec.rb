@@ -25,4 +25,15 @@ describe ActiveAsync::ActiveRecord do
       Blog.create
     end
   end
+
+  context "synchronous callbacks" do
+    it "doesn't prevent synchronous callbacks to be called" do
+      expect(blog).to receive(:cheap_save_from_block)
+      expect(blog).to receive(:cheap_save_from_lambda)
+      expect(blog).to receive(:cheap_save_from_method_name)
+
+      blog.save
+    end
+  end
+
 end
