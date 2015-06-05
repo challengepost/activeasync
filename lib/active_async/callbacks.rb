@@ -9,8 +9,8 @@ module ActiveAsync
           class_eval <<-RUBY
             define_callbacks :async_#{callback_name}
 
-            def self.#{callback_name}_with_async(*methods)
-              #{callback_name}_without_async(*extract_async_methods(methods))
+            def self.#{callback_name}_with_async(*methods, &block)
+              #{callback_name}_without_async(*extract_async_methods(methods), &block)
             end
 
             class << self

@@ -108,7 +108,6 @@ describe ActiveAsync::Callbacks do
         end
       end
 
-
     end
   end
 
