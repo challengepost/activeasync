@@ -3,6 +3,7 @@ require "active_support/concern"
 require "active_async/version"
 require "active_async/async"
 require "active_async/callbacks"
+require "active_async/queue_adapters"
 require 'active_async/railtie' if defined?(Rails)
 
 module ActiveAsync
@@ -10,53 +11,21 @@ module ActiveAsync
 
   class ModeNotSupportedError < StandardError; end
 
-  def background
-    @background ||= ::Resque
-  end
-
-  def background=(background)
-    @background = background
-  end
-
   def enqueue(*args)
-    background.enqueue(*args)
+    queue_adapter.enqueue(*args)
   end
 
-  def reset!
-    @background = nil
-    @mode = nil
+  def queue_adapter=(name)
+    @queue_adapter = interpret_adapter(name)
   end
 
-  def mode=(mode)
-    set_background_for_mode(mode)
-    @mode = mode
+  def queue_adapter
+    @queue_adapter || interpret_adapter(:inline)
   end
-
-  def mode
-    @mode || (mode = :resque)
-  end
-
-  def skip=(true_or_false)
-    @skip = true_or_false
-  end
-
-  def skip
-    !!@skip
-  end
-  alias :skip? :skip
 
   private
 
-  def set_background_for_mode(mode)
-    @background = case mode
-    when :resque
-      ::Resque
-    when :fake_resque
-      require 'active_async/fake_resque'
-      FakeResque
-    else
-      raise ModeNotSupportedError
-    end
+  def interpret_adapter(name)
+    ActiveAsync::QueueAdapters.lookup(name).new
   end
-
 end

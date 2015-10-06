@@ -18,13 +18,14 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # specify any dependencies here; for example:
-  # s.add_runtime_dependency "rest-client"
-  s.add_dependency "resque", "~> 1.10"
   s.add_dependency "activesupport", ">= 3.0"
 
+  s.add_development_dependency "resque", "~> 1.25"
+  s.add_development_dependency "sidekiq", "~> 2.17.0"
   s.add_development_dependency "rails", ">= 3.0"
   s.add_development_dependency "rspec", ">= 3"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "database_cleaner", "~> 1.4.1"
+  s.add_development_dependency "mock_redis"
 end
