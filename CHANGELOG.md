@@ -1,3 +1,7 @@
+## 0.2.0 (2015-10-07)
+
+* BREAKING CHANGES: Support is dropped for Ruby 1.9.3. Please use Ruby 2.x.x
+
 ## 0.1.0 (2015-04-20)
 
 * BREAKING CHANGES: background, mode, skip? are all removed and replaced with
