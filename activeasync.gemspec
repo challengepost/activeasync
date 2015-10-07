@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sidekiq", "~> 2.17.0"
   s.add_development_dependency "rails", ">= 3.0"
   s.add_development_dependency "rspec", ">= 3"
-  s.add_development_dependency "database_cleaner"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "database_cleaner", "~> 1.4.1"
   s.add_development_dependency "mock_redis"
