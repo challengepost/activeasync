@@ -11,7 +11,14 @@ else
   gem "rails", "~> #{rails_version}"
 end
 
-gem "rack-test"
+group :test do
+  if RUBY_VERSION == "1.9.3"
+    gem "rack-cache", "= 1.2.0"
+  else
+    gem "rack-cache"
+  end
+  gem "rack-test"
+end
 
 group :development, :test do
   gem 'pry'
