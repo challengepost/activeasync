@@ -11,9 +11,11 @@ else
   gem "rails", "~> #{rails_version}"
 end
 
-gem "rack-test"
+group :test do
+  gem "rack-test"
+end
 
 group :development, :test do
   gem 'pry'
-  gem 'pry-debugger'
+  gem 'pry-byebug'
 end
