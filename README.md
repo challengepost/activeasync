@@ -21,6 +21,13 @@ Or via command line
 
 ## Usage
 
+Configure one of the supported adapters: `:sidekiq`, `:resque`, or `:inline` (useful for testing synchronously).
+
+```ruby
+# config/initializers/activeasync.rb
+ActiveAsync.queue_adapter = :sidekiq
+```
+
 Background class methods
 
 ``` ruby
