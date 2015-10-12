@@ -3,11 +3,7 @@
 ActiveAsync aims to provide an interface for easily setting up ActiveRecord objects
 and ruby classes to run methods asynchronously.
 
-ActiveAsync currently depends on Resque and ActiveSupport.
-
-Ruby support:
-- 1.9.3
-- 2.1 (coming soon)
+ActiveAsync currently depends on ActiveSupport.
 
 [![Build Status](https://secure.travis-ci.org/challengepost/activeasync.png)](http://travis-ci.org/challengepost/activeasync)
 
