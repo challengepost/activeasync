@@ -73,7 +73,7 @@ late_nite = LateNite.last
 late_nite.save                # runs late_night#drive_home asynchronously after save
 ```
 
-## RSpec
+## Testing
 
 ActiveAsync comes with some helpers support for RSpec.
 
@@ -95,7 +95,7 @@ any similar module/class that responds to `#enqueue(*args)`:
 
 ``` ruby
 before do
-  ActiveAsync.background = ActiveAsync::FakeResque
+  ActiveAsync.queue_adapter = :inline
 end
 ```
 
