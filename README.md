@@ -33,8 +33,6 @@ ActiveAsync.queue_adapter = :sidekiq
 Background class methods
 
 ``` ruby
-require 'active_async'
-
 class HeavyLifter
   include ActiveAsync::Async
 
