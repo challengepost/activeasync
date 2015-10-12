@@ -25,7 +25,7 @@ Configure one of the supported adapters: `:sidekiq`, `:resque`, or `:inline` (us
 
 ```ruby
 # config/initializers/activeasync.rb
-require "activeasync"
+require "active_async"
 
 ActiveAsync.queue_adapter = :sidekiq
 ```
