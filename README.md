@@ -99,6 +99,15 @@ before do
 end
 ```
 
+### Matchers
+* [have_asynched](#have_asynched)
+
+#### have_asynched
+*Describes the method that was expected to be executed asynchronously*
+```ruby
+Location.should have_asynched(:geocode)
+```
+
 ## Contributing
 
 To contribute to activeasync, clone the project and submit pull requests in a branch with tests.
