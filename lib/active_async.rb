@@ -1,4 +1,3 @@
-require "resque"
 require "active_support/concern"
 require "active_async/version"
 require "active_async/async"
