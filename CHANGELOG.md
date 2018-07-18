@@ -1,7 +1,6 @@
 ## 0.2.1 (2018-07-18)
 
 * Don't break for sidekiq-only users
-* Now testing against Rails 4.2 only
 
 ## 0.2.0 (2015-10-07)
 
