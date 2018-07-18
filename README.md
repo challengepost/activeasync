@@ -106,4 +106,4 @@ To contribute to activeasync, clone the project and submit pull requests in a br
 To run tests, install the bundle and migrate the test database:
 
     $ bundle
-    $ cd spec/dummy && bundle exec rake db:migrate db:test:prepare
+    $ cd spec/sample && bundle exec rake db:migrate db:test:prepare

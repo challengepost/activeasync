@@ -10,7 +10,7 @@ require 'resque'
 require 'sidekiq'
 require 'sidekiq/testing'
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path("../sample/config/environment.rb",  __FILE__)
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }

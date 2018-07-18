@@ -6,7 +6,7 @@ rails_version = ENV.fetch('RAILS_VERSION') { 'default' }
 
 case rails_version
 when "default"
-  gem "rails", "~> 4.1.0"
+  gem "rails", "~> 4.2.0"
 else
   gem "rails", "~> #{rails_version}"
 end
